@@ -1,0 +1,55 @@
+name: Build 🔨
+
+on:
+  workflow_call:
+    inputs:
+      major_version:
+        required: true
+        type: string
+      minor_version:
+        required: true
+        type: string
+      build_version:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build 🔨
+    runs-on: [self-hosted, Linux, X64]
+
+    steps:
+      - name: Init Runner ⚙️
+        uses: UnterrainerInformatik/init-runner-action@v1
+
+      - name: Cache Node.js modules 💾
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set up Node ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Update version in package.json 💾
+        uses: reedyuk/npm-version@1.1.1
+        with:
+          version: ${{ inputs.major_version }}.${{ inputs.minor_version }}.${{ inputs.build_version }}
+
+      - name: build (install dependencies) ⚙️
+        run: npm install
+
+      - name: build (build) 🔨
+        run: npm run build
+
+      - name: Upload build artifacts ⬆️
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: ./dist
