@@ -12,6 +12,10 @@ on:
       build_version:
         required: true
         type: string
+      self_hosted:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -21,6 +25,8 @@ jobs:
     steps:
       - name: Init Runner ⚙️
         uses: UnterrainerInformatik/init-runner-action@master
+        with:
+          self-hosted: ${{ inputs.self_hosted }}
 
       - name: Cache Node.js modules 💾
         uses: actions/cache@v3
