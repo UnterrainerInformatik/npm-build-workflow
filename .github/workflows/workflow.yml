@@ -48,13 +48,6 @@ jobs:
       - name: build (build) 🔨
         run: npm run build
 
-      - name: Ensure dist has at least one file
-        run: |
-          mkdir -p dist
-          if [ -z "$(ls -A dist)" ]; then
-            echo "dummy" > dist/.dummy
-          fi
-
       - name: Upload build artifacts ⬆️
         uses: actions/upload-artifact@v4
         with:
