@@ -42,8 +42,10 @@ jobs:
         with:
           version: ${{ inputs.major_version }}.${{ inputs.minor_version }}.${{ inputs.build_version }}
 
-      - name: build (install dependencies) ⚙️
-        run: npm install
+      - name: Fresh dep-install to resolve platform native deps ⚙️
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
       - name: build (build) 🔨
         run: npm run build
