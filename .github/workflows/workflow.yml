@@ -56,6 +56,7 @@ jobs:
           MINOR_VERSION: ${{ inputs.minor_version }}
           BUILD_VERSION: ${{ inputs.build_version }}
         run: |
+          mkdir -p ./dist
           cat <<EOF > ./dist/version.js
           window.version = (() => {
             return {
