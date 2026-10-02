@@ -23,16 +23,16 @@ jobs:
         uses: UnterrainerInformatik/init-runner-action@master
 
       - name: Set up Node ⚙️
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
 
       - name: Update version in package.json 💾
-        uses: reedyuk/npm-version@1.1.1
-        with:
-          version: ${{ inputs.major_version }}.${{ inputs.minor_version }}.${{ inputs.build_version }}
+        env:
+          VERSION: ${{ inputs.major_version }}.${{ inputs.minor_version }}.${{ inputs.build_version }}
+        run: npm version "$VERSION" --no-git-tag-version --allow-same-version
 
       - name: Install dependencies from lockfile ⚙️
         run: npm ci
@@ -59,7 +59,7 @@ jobs:
           EOF
 
       - name: Upload build artifacts ⬆️
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-artifacts
           path: ./dist
