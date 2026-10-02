@@ -22,14 +22,6 @@ jobs:
       - name: Init Runner ⚙️
         uses: UnterrainerInformatik/init-runner-action@master
 
-      - name: Cache Node.js modules 💾
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
       - name: Set up Node ⚙️
         uses: actions/setup-node@v4
         with:
@@ -42,10 +34,8 @@ jobs:
         with:
           version: ${{ inputs.major_version }}.${{ inputs.minor_version }}.${{ inputs.build_version }}
 
-      - name: Fresh dep-install to resolve platform native deps ⚙️
-        run: |
-          rm -rf node_modules package-lock.json
-          npm install
+      - name: Install dependencies from lockfile ⚙️
+        run: npm ci
 
       - name: build (build) 🔨
         run: npm run build
